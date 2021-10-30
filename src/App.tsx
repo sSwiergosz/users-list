@@ -1,10 +1,14 @@
 import { AppWrapper, GlobalStyle } from "./App.styles";
 
+import { UsersList } from "src/views/UsersList";
+
 function App() {
   return (
     <>
       <GlobalStyle />
-      <AppWrapper>TS app</AppWrapper>
+      <AppWrapper>
+        <UsersList />
+      </AppWrapper>
     </>
   );
 }
