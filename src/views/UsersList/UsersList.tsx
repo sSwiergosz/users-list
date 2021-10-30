@@ -15,6 +15,7 @@ import {
 import { SearchBar } from "./components/SearchBar";
 
 export const UsersList = () => {
+  const [error, setError] = useState<string>("");
   const [users, setUsers] = useState<Array<Partial<User>>>([]);
 
   useEffect(() => {
@@ -30,7 +31,8 @@ export const UsersList = () => {
 
         setUsers(filteredData);
       } catch (err) {
-        console.error(err as Error);
+        const castedError = err as Error;
+        setError(`Error! ${castedError.message}.`);
       }
     }
 
@@ -41,14 +43,18 @@ export const UsersList = () => {
     <Wrapper>
       <Title>Users list</Title>
       <SearchBar />
-      <List>
-        {users.map(({ id, name, username }) => (
-          <ListElement key={id}>
-            {name}
-            <Username>{`@${username}`}</Username>
-          </ListElement>
-        ))}
-      </List>
+      {error ? (
+        error
+      ) : (
+        <List>
+          {users.map(({ id, name, username }) => (
+            <ListElement key={id}>
+              {name}
+              <Username>{`@${username}`}</Username>
+            </ListElement>
+          ))}
+        </List>
+      )}
     </Wrapper>
   );
 };
