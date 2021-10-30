@@ -5,10 +5,11 @@ import { debounce } from "src/utils/helpers";
 import { Input } from "./SearchBar.styles";
 
 interface SearchBarProps {
+  query: string;
   setQuery: Dispatch<SetStateAction<string>>;
 }
 
-export const SearchBar = ({ setQuery }: SearchBarProps) => {
+export const SearchBar = ({ query, setQuery }: SearchBarProps) => {
   const debouncedHandleQueryChange = useMemo(
     () =>
       debounce(
@@ -20,9 +21,11 @@ export const SearchBar = ({ setQuery }: SearchBarProps) => {
 
   return (
     <Input
+      data-testid="search-input"
       type="text"
       onChange={debouncedHandleQueryChange}
       placeholder="Search by user name..."
+      value={query}
     />
   );
 };

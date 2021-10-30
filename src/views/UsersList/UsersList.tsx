@@ -53,7 +53,7 @@ export const UsersList = () => {
   return (
     <Wrapper>
       <Title>Users list</Title>
-      <SearchBar setQuery={setQuery} />
+      <SearchBar query={query} setQuery={setQuery} />
       {error ? (
         error
       ) : (
