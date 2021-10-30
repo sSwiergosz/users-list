@@ -17,7 +17,7 @@ export const ListElement = styled.li`
     left: -2rem;
     width: 1rem;
     text-align: left;
-    color: #bfbfbf;
+    color: ${({ theme }) => theme.gray};
   }
 `;
 
@@ -27,7 +27,7 @@ export const Title = styled.h1`
 `;
 
 export const Username = styled.span`
-  color: #bfbfbf;
+  color: ${({ theme }) => theme.gray};
   margin-left: 1em;
 `;
 
