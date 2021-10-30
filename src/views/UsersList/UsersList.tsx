@@ -17,6 +17,8 @@ import { SearchBar } from "./components/SearchBar";
 export const UsersList = () => {
   const [error, setError] = useState<string>("");
   const [users, setUsers] = useState<Array<Partial<User>>>([]);
+  const [filteredUsers, setFilterdUsers] = useState<Array<Partial<User>>>([]);
+  const [query, setQuery] = useState<string>("");
 
   useEffect(() => {
     async function getUsers() {
@@ -30,6 +32,7 @@ export const UsersList = () => {
         }));
 
         setUsers(filteredData);
+        setFilterdUsers(filteredData);
       } catch (err) {
         const castedError = err as Error;
         setError(`Error! ${castedError.message}.`);
@@ -39,15 +42,23 @@ export const UsersList = () => {
     getUsers();
   }, []);
 
+  useEffect(() => {
+    const filteredResults = users.filter(({ name }) =>
+      name?.toLowerCase().includes(query.toLowerCase())
+    );
+
+    setFilterdUsers(filteredResults);
+  }, [query, users]);
+
   return (
     <Wrapper>
       <Title>Users list</Title>
-      <SearchBar />
+      <SearchBar setQuery={setQuery} />
       {error ? (
         error
       ) : (
         <List>
-          {users.map(({ id, name, username }) => (
+          {filteredUsers.map(({ id, name, username }) => (
             <ListElement key={id}>
               {name}
               <Username>{`@${username}`}</Username>
