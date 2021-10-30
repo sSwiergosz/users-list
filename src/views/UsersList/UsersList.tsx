@@ -19,19 +19,23 @@ export const UsersList = () => {
 
   useEffect(() => {
     async function getUsers() {
-      const { data } = await api.getUsers();
+      try {
+        const { data } = await api.getUsers();
 
-      const filteredData = data.map(({ id, name, username }) => ({
-        id,
-        name,
-        username,
-      }));
+        const filteredData = data.map(({ id, name, username }) => ({
+          id,
+          name,
+          username,
+        }));
 
-      setUsers(filteredData);
+        setUsers(filteredData);
+      } catch (err) {
+        console.error(err as Error);
+      }
     }
 
     getUsers();
-  });
+  }, []);
 
   return (
     <Wrapper>
