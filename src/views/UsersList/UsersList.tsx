@@ -19,6 +19,7 @@ export const UsersList = () => {
   const [users, setUsers] = useState<Array<Partial<User>>>([]);
   const [filteredUsers, setFilterdUsers] = useState<Array<Partial<User>>>([]);
   const [query, setQuery] = useState<string>("");
+  const [isPending, setIsPending] = useState<boolean>(false);
 
   useEffect(() => {
     async function getUsers() {
@@ -33,11 +34,14 @@ export const UsersList = () => {
 
         setUsers(filteredData);
         setFilterdUsers(filteredData);
+        setIsPending(false);
       } catch (err) {
         setError(err);
+        setIsPending(false);
       }
     }
 
+    setIsPending(true);
     getUsers();
   }, []);
 
@@ -53,6 +57,8 @@ export const UsersList = () => {
     <Wrapper>
       <Title>Users list</Title>
       <SearchBar query={query} setQuery={setQuery} />
+
+      {isPending && <p>Loading ...</p>}
 
       {error && <p>Something went wrong...</p>}
 

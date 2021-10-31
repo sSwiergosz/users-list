@@ -25,7 +25,7 @@ export const SearchBar = ({ query, setQuery }: SearchBarProps) => {
       type="text"
       onChange={debouncedHandleQueryChange}
       placeholder="Search by user name..."
-      value={query}
+      defaultValue={query}
     />
   );
 };
