@@ -1,21 +1,23 @@
-import { act, cleanup, render, waitFor, screen } from "@testing-library/react";
+import { act, render, waitFor, screen } from "@testing-library/react";
 import axios from "axios";
 
 import { UsersList } from "./UsersList";
 
 import { mockedUsers } from "src/utils/mocks";
 
-beforeEach(() => {
-  (axios.get as jest.Mock) = jest.fn(() =>
-    Promise.resolve({ data: mockedUsers })
-  );
-});
-
-afterEach(cleanup);
+jest.mock("axios");
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe("UsersList", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("renders list correctly", async () => {
-    act(() => {
+    await act(async () => {
+      mockedAxios.get.mockImplementationOnce(() =>
+        Promise.resolve({ data: mockedUsers })
+      );
       render(<UsersList />);
     });
 
@@ -27,6 +29,21 @@ describe("UsersList", () => {
       expect(name).toBeInTheDocument();
       expect(username).toBeInTheDocument();
       expect(title).toBeInTheDocument();
+      expect(mockedAxios.get).toBeCalledTimes(1);
+    });
+  });
+
+  it("renders list with error", async () => {
+    await act(async () => {
+      mockedAxios.get.mockImplementationOnce(() => Promise.reject(new Error()));
+      render(<UsersList />);
+    });
+
+    await waitFor(() => {
+      const errorMessage = screen.getByText("Something went wrong...");
+
+      expect(errorMessage).toBeInTheDocument();
+      expect(mockedAxios.get).toBeCalledTimes(1);
     });
   });
 });

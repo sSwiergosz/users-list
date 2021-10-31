@@ -15,7 +15,7 @@ import {
 import { SearchBar } from "./components/SearchBar";
 
 export const UsersList = () => {
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<unknown | null>(null);
   const [users, setUsers] = useState<Array<Partial<User>>>([]);
   const [filteredUsers, setFilterdUsers] = useState<Array<Partial<User>>>([]);
   const [query, setQuery] = useState<string>("");
@@ -34,8 +34,7 @@ export const UsersList = () => {
         setUsers(filteredData);
         setFilterdUsers(filteredData);
       } catch (err) {
-        const castedError = err as Error;
-        setError(`Error! ${castedError.message}.`);
+        setError(err);
       }
     }
 
@@ -54,18 +53,17 @@ export const UsersList = () => {
     <Wrapper>
       <Title>Users list</Title>
       <SearchBar query={query} setQuery={setQuery} />
-      {error ? (
-        error
-      ) : (
-        <List>
-          {filteredUsers.map(({ id, name, username }) => (
-            <ListElement key={id}>
-              {name}
-              <Username>{`@${username}`}</Username>
-            </ListElement>
-          ))}
-        </List>
-      )}
+
+      {error && <p>Something went wrong...</p>}
+
+      <List>
+        {filteredUsers.map(({ id, name, username }) => (
+          <ListElement key={id}>
+            {name}
+            <Username>{`@${username}`}</Username>
+          </ListElement>
+        ))}
+      </List>
     </Wrapper>
   );
 };
