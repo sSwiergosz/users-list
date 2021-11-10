@@ -16,8 +16,7 @@ import { SearchBar } from "./components/SearchBar";
 
 export const UsersList = () => {
   const [error, setError] = useState<unknown | null>(null);
-  const [users, setUsers] = useState<Array<Partial<User>>>([]);
-  const [filteredUsers, setFilterdUsers] = useState<Array<Partial<User>>>([]);
+  const [users, setUsers] = useState<Array<User>>([]);
   const [query, setQuery] = useState<string>("");
   const [isPending, setIsPending] = useState<boolean>(false);
 
@@ -33,7 +32,6 @@ export const UsersList = () => {
         }));
 
         setUsers(filteredData);
-        setFilterdUsers(filteredData);
         setIsPending(false);
       } catch (err) {
         setError(err);
@@ -45,13 +43,11 @@ export const UsersList = () => {
     getUsers();
   }, []);
 
-  useEffect(() => {
-    const filteredResults = users.filter(({ name }) =>
+  const filteredUsers = (items: Array<User>) => {
+    return items.filter(({ name }) =>
       name?.toLowerCase().includes(query.toLowerCase())
     );
-
-    setFilterdUsers(filteredResults);
-  }, [query, users]);
+  };
 
   return (
     <Wrapper>
@@ -63,7 +59,7 @@ export const UsersList = () => {
       {error && <p>Something went wrong...</p>}
 
       <List>
-        {filteredUsers.map(({ id, name, username }) => (
+        {filteredUsers(users).map(({ id, name, username }) => (
           <ListElement key={id}>
             {name}
             <Username>{`@${username}`}</Username>
